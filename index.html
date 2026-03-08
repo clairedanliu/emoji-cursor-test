@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emoji Generator</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #fafafa;
+      color: #1a1a1a;
+    }
+    .container {
+      width: 100%;
+      max-width: 360px;
+      padding: 24px;
+    }
+    input {
+      width: 100%;
+      padding: 14px 16px;
+      font-size: 16px;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      outline: none;
+      margin-bottom: 12px;
+    }
+    input:focus {
+      border-color: #666;
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: 500;
+      border: none;
+      border-radius: 10px;
+      background: #1a1a1a;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #333;
+    }
+    .result {
+      margin-top: 32px;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      font-size: 48px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <input type="text" id="input" placeholder="输入文字..." autofocus>
+    <button type="button" id="btn">Continue</button>
+    <div class="result" id="result"></div>
+  </div>
+  <script>
+    const emojiPools = [
+      ['😀', '😊', '🎉', '✨', '🌟', '💡', '🔥', '❤️', '👍', '🚀'],
+      ['🍎', '🌸', '🌈', '☀️', '🌙', '⭐', '💫', '🎵', '🎨', '📚'],
+      ['🐶', '🐱', '🦋', '🐢', '🦊', '🐼', '🦁', '🐸', '🐙', '🦄']
+    ];
+    function hash(str) {
+      let h = 0;
+      for (let i = 0; i < str.length; i++) {
+        h = ((h << 5) - h) + str.charCodeAt(i);
+        h |= 0;
+      }
+      return Math.abs(h);
+    }
+    function generateEmojis(text) {
+      if (!text.trim()) return ['🎲', '🎲', '🎲'];
+      const h = hash(text);
+      return emojiPools.map((pool, i) => pool[(h + i * 7) % pool.length]);
+    }
+    document.getElementById('btn').onclick = () => {
+      const text = document.getElementById('input').value;
+      const emojis = generateEmojis(text);
+      document.getElementById('result').textContent = '';
+      emojis.forEach(e => {
+        const span = document.createElement('span');
+        span.textContent = e;
+        document.getElementById('result').appendChild(span);
+      });
+    };
+  </script>
+</body>
+</html>
